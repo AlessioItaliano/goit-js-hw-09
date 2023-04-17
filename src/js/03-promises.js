@@ -10,7 +10,7 @@ function onSubmit(event) {
   let stepOfForm = Number(submitForm.step.value);
   let amountOfForm = Number(submitForm.amount.value);
 
-  for (let i = 0; i <= amountOfForm; i += 1) {
+  for (let i = 1; i <= amountOfForm; i += 1) {
     createPromise(i, delayOfForm)
       .then(({ position, delayOfForm }) => {
         Notify.success(`✅ Fulfilled promise ${position} in ${delayOfForm}ms`);
