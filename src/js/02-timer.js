@@ -11,7 +11,6 @@ const dataSeconds = document.querySelector('[data-seconds]');
 startBtn.setAttribute('disabled', 'disabled');
 let timerId = null;
 let timeToTheEnd = null;
-// let formatingTime = null;
 
 const options = {
   enableTime: true,
@@ -27,6 +26,7 @@ const options = {
 function checkAvaiblkeDates(selectedDates) {
   if (selectedDates < Date.now()) {
     Notify.failure('Please choose a date in the future');
+
     return;
   }
   startBtn.removeAttribute('disabled', 'disabled');

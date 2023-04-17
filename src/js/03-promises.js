@@ -1,108 +1,40 @@
-// function createPromise(position, delay) {
-//   const shouldResolve = Math.random() > 0.3;
-//   if (shouldResolve) {
-//     // Fulfill
-//   } else {
-//     // Reject
-//   }
-// }
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-// // Import library
-// import flatpickr from 'flatpickr';
-// import convertMs from './dateConvert';
-// import { Notify } from 'notiflix/build/notiflix-notify-aio';
+const submitForm = document.querySelector('.form');
 
-// // Import additional css styles
-// import 'flatpickr/dist/flatpickr.min.css';
+submitForm.addEventListener('submit', onSubmit);
 
-// // Get element date input, start btn, data: days, hours, min, sec
-// let getRef = selector => document.querySelector(selector);
-// const imputDatePickerRef = getRef('#datetime-picker');
-// const btnStartRef = getRef('[data-start]');
-// const daysRef = getRef('[data-days]');
-// const hoursRef = getRef('[data-hours]');
-// const minutesRef = getRef('[data-minutes]');
-// const secondsRef = getRef('[data-seconds]');
+function onSubmit(event) {
+  event.preventDefault();
+  let delayOfForm = Number(submitForm.delay.value);
+  let stepOfForm = Number(submitForm.step.value);
+  let amountOfForm = Number(submitForm.amount.value);
 
-// // Set initial value
-// let timeDifference = 0;
-// let timerId = null;
-// let formatDate = null;
+  for (let i = 0; i <= amountOfForm; i += 1) {
+    createPromise(i, delayOfForm)
+      .then(({ position, delayOfForm }) => {
+        Notify.success(`✅ Fulfilled promise ${position} in ${delayOfForm}ms`);
+      })
+      .catch(({ position, delay }) => {
+        Notify.failure(`❌ Rejected promise ${position} in ${delayOfForm}ms`);
+      });
+    delayOfForm += stepOfForm;
+  }
+}
 
-// const options = {
-//   enableTime: true,
-//   time_24hr: true,
-//   defaultDate: new Date(),
-//   minuteIncrement: 1,
-//   onClose(selectedDates) {
-//     console.log(selectedDates[0]);
-//     currentDifferenceDate(selectedDates[0]);
-//   },
-// };
+function createPromise(position, delayOfForm) {
+  const newPromise = { position, delayOfForm };
+  const shouldResolve = Math.random() > 0.3;
 
-// btnStartRef.setAttribute('disabled', true);
-
-// // Initial flatpickr
-// flatpickr(imputDatePickerRef, options);
-
-// // Set click event listener on button start
-// btnStartRef.addEventListener('click', onBtnStart);
-// // Reset timer on btn
-// window.addEventListener('keydown', e => {
-//   if (e.code === 'Escape' && timerId) {
-//     clearInterval(timerId);
-
-//     imputDatePickerRef.removeAttribute('disabled');
-//     btnStartRef.setAttribute('disabled', true);
-
-//     secondsRef.textContent = '00';
-//     minutesRef.textContent = '00';
-//     hoursRef.textContent = '00';
-//     daysRef.textContent = '00';
-//   }
-// });
-
-// // Start timer
-// function onBtnStart() {
-//   timerId = setInterval(startTimer, 1000);
-// }
-
-//date checking and rendering of date difference
-// function currentDifferenceDate(selectedDates) {
-//   const currentDate = Date.now();
-
-//   if (selectedDates < currentDate) {
-//     btnStartRef.setAttribute('disabled', true);
-//     return Notify.failure('Please choose a date in the future');
-//   }
-
-//   timeDifference = selectedDates.getTime() - currentDate;
-//   formatDate = convertMs(timeDifference);
-
-//   renderDate(formatDate);
-//   btnStartRef.removeAttribute('disabled');
-// }
-
-// //Timer
-// function startTimer() {
-//   btnStartRef.setAttribute('disabled', true);
-//   imputDatePickerRef.setAttribute('disabled', true);
-
-//   timeDifference -= 1000;
-
-//   if (secondsRef.textContent <= 0 && minutesRef.textContent <= 0) {
-//     Notify.success('Time end');
-//     clearInterval(timerId);
-//   } else {
-//     formatDate = convertMs(timeDifference);
-//     renderDate(formatDate);
-//   }
-// }
-
-// // Rendering date
-// function renderDate(formatDate) {
-//   secondsRef.textContent = formatDate.seconds;
-//   minutesRef.textContent = formatDate.minutes;
-//   hoursRef.textContent = formatDate.hours;
-//   daysRef.textContent = formatDate.days;
-// }
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (shouldResolve) {
+        // Fulfill
+        resolve(newPromise);
+      } else {
+        // Reject
+        reject(newPromise);
+      }
+    }, delayOfForm);
+  });
+}
