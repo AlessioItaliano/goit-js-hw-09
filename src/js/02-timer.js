@@ -18,22 +18,19 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
-    checkAvaiblkeDates(selectedDates[0]);
+    console.log(selectedDates[0].getTime());
+    console.log(options.defaultDate.getTime());
+    if (selectedDates[0].getTime() < options.defaultDate.getTime()) {
+      Notify.failure('Please choose a date in the future');
+
+      return;
+    }
+    startBtn.removeAttribute('disabled', 'disabled');
+    timeToTheEnd = selectedDates[0].getTime() - options.defaultDate.getTime();
+
+    return timeToTheEnd;
   },
 };
-
-function checkAvaiblkeDates(selectedDates) {
-  if (selectedDates < Date.now()) {
-    Notify.failure('Please choose a date in the future');
-
-    return;
-  }
-  startBtn.removeAttribute('disabled', 'disabled');
-  timeToTheEnd = selectedDates - Date.now();
-  convertTime = convertMs(timeToTheEnd);
-  formatintTime(convertTime);
-}
 
 function convertMs(ms) {
   const second = 1000;
@@ -62,11 +59,18 @@ startBtn.addEventListener('click', onClickStartBtn);
 
 function onClickStartBtn() {
   timerId = setInterval(startTimer, 1000);
+  convertTime = convertMs(timeToTheEnd);
+  formatintTime(convertTime);
 }
 
 function startTimer() {
   startBtn.setAttribute('disabled', 'disabled');
-  if (dataSeconds.textContent <= 0 && dataMinutes.textContent <= 0) {
+  if (
+    dataSeconds.textContent <= 0 &&
+    dataMinutes.textContent <= 0 &&
+    dataHours.textContent <= 0 &&
+    dataDays.textContent <= 0
+  ) {
     clearInterval(timerId);
   } else {
     timeToTheEnd -= 1000;
