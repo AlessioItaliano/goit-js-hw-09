@@ -11,6 +11,7 @@ const dataSeconds = document.querySelector('[data-seconds]');
 startBtn.setAttribute('disabled', 'disabled');
 let timerId = null;
 let timeToTheEnd = null;
+let convertTime = null;
 
 const options = {
   enableTime: true,
@@ -18,8 +19,6 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0].getTime());
-    console.log(options.defaultDate.getTime());
     if (selectedDates[0].getTime() < options.defaultDate.getTime()) {
       Notify.failure('Please choose a date in the future');
 
@@ -27,7 +26,6 @@ const options = {
     }
     startBtn.removeAttribute('disabled', 'disabled');
     timeToTheEnd = selectedDates[0].getTime() - options.defaultDate.getTime();
-
     return timeToTheEnd;
   },
 };
@@ -66,12 +64,19 @@ function onClickStartBtn() {
 function startTimer() {
   startBtn.setAttribute('disabled', 'disabled');
   if (
-    dataSeconds.textContent <= 0 &&
-    dataMinutes.textContent <= 0 &&
-    dataHours.textContent <= 0 &&
-    dataDays.textContent <= 0
+    timeToTheEnd < 0
+    // dataSeconds.textContent <= 0 &&
+    // dataMinutes.textContent <= 0 &&
+    // dataHours.textContent <= 0 &&
+    // dataDays.textContent <= 0
   ) {
+    // console.log(timeToTheEnd);
+    // console.log(options.defaultDate.getTime());
     clearInterval(timerId);
+    // dataSeconds.textContent = 0;
+    // dataMinutes.textContent = 0;
+    // dataHours.textContent = 0;
+    // dataDays.textContent = 0;
   } else {
     timeToTheEnd -= 1000;
     convertTime = convertMs(timeToTheEnd);
