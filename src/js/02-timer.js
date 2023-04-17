@@ -26,6 +26,7 @@ const options = {
     }
     startBtn.removeAttribute('disabled', 'disabled');
     timeToTheEnd = selectedDates[0].getTime() - options.defaultDate.getTime();
+
     return timeToTheEnd;
   },
 };
@@ -44,11 +45,15 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
+function addTwoNumber(value) {
+  return String(value).padStart(2, 0);
+}
+
 function formatintTime(time) {
-  dataSeconds.textContent = time.seconds;
-  dataMinutes.textContent = time.minutes;
-  dataHours.textContent = time.hours;
-  dataDays.textContent = time.days;
+  dataSeconds.textContent = addTwoNumber(time.seconds);
+  dataMinutes.textContent = addTwoNumber(time.minutes);
+  dataHours.textContent = addTwoNumber(time.hours);
+  dataDays.textContent = addTwoNumber(time.days);
 }
 
 const dateTimePicker = flatpickr('#datetime-picker', options);
@@ -62,24 +67,16 @@ function onClickStartBtn() {
 }
 
 function startTimer() {
+  timeToTheEnd -= 1000;
   startBtn.setAttribute('disabled', 'disabled');
-  if (
-    timeToTheEnd < 0
-    // dataSeconds.textContent <= 0 &&
-    // dataMinutes.textContent <= 0 &&
-    // dataHours.textContent <= 0 &&
-    // dataDays.textContent <= 0
-  ) {
-    // console.log(timeToTheEnd);
-    // console.log(options.defaultDate.getTime());
+  if (timeToTheEnd <= 0) {
     clearInterval(timerId);
-    // dataSeconds.textContent = 0;
-    // dataMinutes.textContent = 0;
-    // dataHours.textContent = 0;
-    // dataDays.textContent = 0;
+
+    return;
   } else {
-    timeToTheEnd -= 1000;
     convertTime = convertMs(timeToTheEnd);
     formatintTime(convertTime);
+
+    return;
   }
 }
